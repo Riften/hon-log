@@ -27,4 +27,14 @@ func TestLog(t *testing.T) {
 	}()
 
 	logger.OutputChan(outChan)
+
+	testcb := func(s string) {
+		fmt.Printf("Func Get: %s\n", s)
+	}
+
+	testdone := func() {
+		fmt.Println("Func End")
+	}
+
+	logger.OutputFunc(testcb, testdone)
 }

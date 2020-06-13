@@ -46,6 +46,20 @@ func (l *Logger) Add(str string) {
 	l.writeHead = (l.writeHead+1)%l.capacity
 }
 
+func (l *Logger) OutputFunc(cb func(string), done func()) {
+	readHead := l.writeHead - l.size
+	if readHead <0 {
+		readHead += l.capacity
+	}
+	for  i:=0; i<l.size; i++ {
+		str := l.data[(readHead+i)%l.capacity]
+		if str != "" {
+			cb(str)
+		}
+	}
+	done()
+}
+
 func (l *Logger) OutputChan(c chan<- string) {
 	readHead := l.writeHead - l.size
 	if readHead <0 {
