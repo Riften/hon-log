@@ -20,7 +20,7 @@ func NewLoggerWithSize(size int) *Logger {
 	return &Logger {
 		size: size,
 		capacity: 2*size,
-		data : make([]string,0 , 2*size),
+		data : make([]string,2*size , 2*size),
 		//readHead: 0,
 		writeHead: 0,
 	}
@@ -31,7 +31,7 @@ func NewLogger() *Logger {
 	return &Logger{
 		size : defaultSize,
 		capacity: 2*defaultSize,
-		data: make([]string, 0, 2*defaultSize),
+		data: make([]string, 2*defaultSize, 2*defaultSize),
 		//readHead: 0,
 		writeHead: 0,
 	}
@@ -43,7 +43,7 @@ func (l *Logger) GetSize() int{
 
 func (l *Logger) Add(str string) {
 	l.data[l.writeHead] = str
-	l.writeHead += 1
+	l.writeHead = (l.writeHead+1)%l.capacity
 }
 
 func (l *Logger) OutputChan(c chan<- string) {
@@ -53,7 +53,27 @@ func (l *Logger) OutputChan(c chan<- string) {
 	}
 	for  i:=0; i<l.size; i++ {
 		str := l.data[(readHead+i)%l.capacity]
-		c <- str
+		if str != "" {
+			c <- str
+		}
+	}
+	close(c)
+}
+
+func (l *Logger) OurputChanSize(c chan <- string, s int) {
+	if s > l.size {
+		s = l.size
+	}
+
+	readHead := l.writeHead - l.size
+	if readHead <0 {
+		readHead += l.capacity
+	}
+	for  i:=0; i<s; i++ {
+		str := l.data[(readHead+i)%l.capacity]
+		if str != "" {
+			c <- str
+		}
 	}
 	close(c)
 }
