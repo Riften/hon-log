@@ -1,8 +1,13 @@
 package honlog
 
 import (
+	"strings"
 	"sync"
+	"time"
 )
+
+const timeFormat = "15:04:05.000"
+
 //var DefaultLogger *Logger
 type Logger struct {
 	data []string
@@ -42,7 +47,8 @@ func (l *Logger) GetSize() int{
 }
 
 func (l *Logger) Add(str string) {
-	l.data[l.writeHead] = str
+	timeStr := time.Now().Format(timeFormat)
+	l.data[l.writeHead] = strings.Join([]string{timeStr, str}, " ")
 	l.writeHead = (l.writeHead+1)%l.capacity
 }
 
