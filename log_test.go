@@ -38,3 +38,43 @@ func TestLog(t *testing.T) {
 
 	logger.OutputFunc(testcb, testdone)
 }
+
+func TestTree(t *testing.T) {
+	tree := NewTree("A", nil)
+	err := tree.Append("B", nil, "C")
+	if err != nil {
+		t.Error(err)
+	}
+	err = tree.Append("E", nil, "D")
+	if err != nil {
+		t.Error(err)
+	}
+	err = tree.Append("C", nil, "A")
+	if err != nil {
+		t.Error(err)
+	}
+	err = tree.Append("F", nil, "D")
+	if err != nil {
+		t.Error(err)
+	}
+	err = tree.Append("D", nil, "A")
+	if err != nil {
+		t.Error(err)
+	}
+	err = tree.Append("G", nil, "D")
+	if err != nil {
+		t.Error(err)
+	}
+	err = tree.Append("H", nil, "A")
+	if err != nil {
+		t.Error(err)
+	}
+	err = tree.Append("I", nil, "H")
+	if err != nil {
+		t.Error(err)
+	}
+	err = tree.WriteCSV("test.csv")
+	if err != nil {
+		t.Error(err)
+	}
+}
