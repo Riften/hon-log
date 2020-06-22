@@ -66,6 +66,27 @@ func (l *Logger) OutputFunc(cb func(string), done func()) {
 	done()
 }
 
+/*
+ * Output at most s lines of log.
+ * Note that
+ */
+func (l *Logger) OutputFuncSize(cb func(string), done func(), s int) {
+	if s > l.size {
+		s = l.size
+	}
+	readHead := l.writeHead - s
+	if readHead <0 {
+		readHead += l.capacity
+	}
+	for  i:=0; i<s; i++ {
+		str := l.data[(readHead+i)%l.capacity]
+		if str != "" {
+			cb(str)
+		}
+	}
+	done()
+}
+
 func (l *Logger) OutputChan(c chan<- string) {
 	readHead := l.writeHead - l.size
 	if readHead <0 {
@@ -80,7 +101,7 @@ func (l *Logger) OutputChan(c chan<- string) {
 	close(c)
 }
 
-func (l *Logger) OurputChanSize(c chan <- string, s int) {
+func (l *Logger) OutputChanSize(c chan <- string, s int) {
 	if s > l.size {
 		s = l.size
 	}
