@@ -8,6 +8,8 @@ import (
 
 const timeFormat = "15:04:05.000"
 
+var Hlog = NewLogger()
+
 //var DefaultLogger *Logger
 type Logger struct {
 	data []string
